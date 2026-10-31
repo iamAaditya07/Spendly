@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spendly — Personal Expense Tracker</title>
+  <meta name="description" content="Spendly is a simple, uncluttered personal expense tracker to log daily spending, categorize expenses, and visualize monthly summary charts.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <div class="brand-text-block">
+          <h1>Spendly</h1>
+          <span class="brand-subtitle">Personal Expense Tracker</span>
+        </div>
+      </div>
+
+      <!-- Month Selector -->
+      <div class="month-selector">
+        <button id="prev-month-btn" class="month-nav-btn" title="Previous Month" aria-label="Previous Month">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div id="current-month-display" class="current-month-display">October 2026</div>
+        <button id="next-month-btn" class="month-nav-btn" title="Next Month" aria-label="Next Month">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button id="today-btn" class="today-quick-btn" title="Jump to Current Month">Today</button>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Currency Selector -->
+        <div class="currency-select-wrap">
+          <select id="currency-select" class="currency-select" aria-label="Select Currency">
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
+            <option value="£">GBP (£)</option>
+            <option value="₹">INR (₹)</option>
+            <option value="C$">CAD (C$)</option>
+            <option value="A$">AUD (A$)</option>
+            <option value="¥">JPY (¥)</option>
+          </select>
+          <svg class="currency-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-btn" class="icon-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <svg id="theme-moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="theme-sun-icon" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Settings / Data Modal Trigger -->
+        <button id="open-settings-btn" class="icon-btn" title="Data Backup & Settings" aria-label="Settings and Data Backup">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Overview Metric Cards -->
+    <section class="metrics-grid" aria-label="Monthly Financial Overview">
+      <!-- Total Spent -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Total Spending</span>
+          <div class="metric-icon-wrap" style="background: var(--brand-light); color: var(--brand-primary);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+        </div>
+        <div id="stat-total-spent" class="metric-value">$0.00</div>
+        <div class="metric-meta">
+          <span id="stat-tx-count">0 expenses</span>
+          <span>logged this month</span>
+        </div>
+      </div>
+
+      <!-- Budget Status -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Budget Status</span>
+          <div class="metric-icon-wrap" style="background: var(--accent-success-light); color: var(--accent-success);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+        </div>
+        <div id="stat-budget-remaining" class="metric-value">$0.00</div>
+        <div class="metric-meta">
+          <span id="stat-budget-percent">0%</span> of <span id="stat-budget-target">$2,400</span> limit
+          <button id="open-budget-btn" class="budget-edit-link" title="Set monthly budget">Edit</button>
+        </div>
+        <div class="budget-progress-container">
+          <div id="budget-progress-bar" class="budget-progress-bar normal" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Daily Average -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Daily Average</span>
+          <div class="metric-icon-wrap" style="background: #FEF3C7; color: #D97706;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div id="stat-daily-avg" class="metric-value">$0.00</div>
+        <div class="metric-meta">
+          <span>Per active day this month</span>
+        </div>
+      </div>
+
+      <!-- Top Category -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Top Spending Category</span>
+          <div class="metric-icon-wrap" style="background: #F3E8FF; color: #7C3AED;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+              <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+            </svg>
+          </div>
+        </div>
+        <div id="stat-top-category" class="metric-value" style="font-size: 1.4rem;">None</div>
+        <div class="metric-meta">
+          <span id="stat-top-category-amount">$0.00</span>
+          <span id="stat-top-category-share">(0% of total)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Workspace -->
+    <main class="workspace-grid">
+      <!-- Left Column: Log Expense & Transactions List -->
+      <div class="workspace-column">
+        <!-- Log Expense Card -->
+        <section class="content-card">
+          <div class="card-title-bar">
+            <h2>Log Spending</h2>
+            <span class="card-subtitle-badge">Quick Add</span>
+          </div>
+
+          <form id="expense-form" class="expense-form" autocomplete="off">
+            <!-- Row 1: Amount & Title -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="exp-amount" class="form-label">Amount</label>
+                <div class="input-with-symbol">
+                  <span id="form-currency-symbol" class="input-symbol">$</span>
+                  <input type="number" id="exp-amount" class="form-input padded-symbol" placeholder="0.00" step="0.01" min="0.01" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="exp-title" class="form-label">Description / Title</label>
+                <input type="text" id="exp-title" class="form-input" placeholder="e.g. Groceries, Coffee, Rent" required>
+              </div>
+            </div>
+
+            <!-- Row 2: Category & Date -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="exp-category" class="form-label">Category</label>
+                <select id="exp-category" class="form-input category-select-custom" required>
+                  <option value="food">🍽️ Food & Dining</option>
+                  <option value="groceries">🛒 Groceries</option>
+                  <option value="housing">🏠 Housing & Rent</option>
+                  <option value="transport">🚗 Transportation</option>
+                  <option value="entertainment">🎬 Entertainment</option>
+                  <option value="shopping">🛍️ Shopping</option>
+                  <option value="utilities">⚡ Utilities & Bills</option>
+                  <option value="health">❤️ Health & Fitness</option>
+                  <option value="personal">✨ Personal Care</option>
+                  <option value="other">📦 Other / Misc</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="exp-date" class="form-label">Date</label>
+                <input type="date" id="exp-date" class="form-input" required>
+              </div>
+            </div>
+
+            <!-- Quick category chips for 1-click select -->
+            <div class="category-chips-wrap">
+              <button type="button" class="category-chip" data-cat="food">🍽️ Food</button>
+              <button type="button" class="category-chip" data-cat="groceries">🛒 Groceries</button>
+              <button type="button" class="category-chip" data-cat="transport">🚗 Transit</button>
+              <button type="button" class="category-chip" data-cat="shopping">🛍️ Shopping</button>
+              <button type="button" class="category-chip" data-cat="utilities">⚡ Utilities</button>
+            </div>
+
+            <!-- Optional note -->
+            <div class="form-group">
+              <label for="exp-notes" class="form-label">Note (Optional)</label>
+              <input type="text" id="exp-notes" class="form-input" placeholder="e.g. Card payment, split with friends">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-primary" id="save-expense-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Log Expense</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Filter & Recent Transactions List -->
+        <section class="content-card">
+          <div class="card-title-bar">
+            <h2>Transactions</h2>
+            <span id="transactions-count-badge" class="card-subtitle-badge">0 items</span>
+          </div>
+
+          <!-- Search and Filter Bar -->
+          <div class="transactions-filter-bar">
+            <div class="search-input-wrapper">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="tx-search-input" class="search-input" placeholder="Search by name or note...">
+            </div>
+
+            <select id="tx-category-filter" class="category-filter-select" aria-label="Filter by category">
+              <option value="all">All Categories</option>
+              <option value="food">Food & Dining</option>
+              <option value="groceries">Groceries</option>
+              <option value="housing">Housing & Rent</option>
+              <option value="transport">Transportation</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="shopping">Shopping</option>
+              <option value="utilities">Utilities & Bills</option>
+              <option value="health">Health & Fitness</option>
+              <option value="personal">Personal Care</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Transaction Items -->
+          <div id="transactions-list" class="transactions-list-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Monthly Summary Charts & Analytics -->
+      <div class="workspace-column">
+        <!-- Monthly Category Breakdown Card -->
+        <section class="content-card">
+          <div class="card-title-bar">
+            <h2>Spending by Category</h2>
+            <span class="card-subtitle-badge">Monthly Summary</span>
+          </div>
+
+          <!-- Donut Chart Container -->
+          <div id="donut-chart-container" class="chart-container-donut">
+            <!-- Rendered via SVG -->
+          </div>
+
+          <!-- Category Progress List -->
+          <div id="category-breakdown-list" class="category-breakdown-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- Daily Spending Activity Card -->
+        <section class="content-card">
+          <div class="card-title-bar">
+            <h2>Daily Spending Activity</h2>
+            <span class="card-subtitle-badge">Calendar Trend</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+            Hover over any day bar to inspect spending amounts. The dashed line marks your daily average.
+          </p>
+
+          <!-- Daily Bar Chart Container -->
+          <div id="daily-chart-container" class="daily-chart-wrapper">
+            <!-- Rendered via SVG -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal: Edit Expense -->
+  <div id="edit-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Expense</h3>
+        <button id="close-edit-modal-btn" class="modal-close-btn" aria-label="Close Modal">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="edit-expense-form" class="expense-form">
+        <input type="hidden" id="edit-exp-id">
+        <div class="form-group">
+          <label for="edit-exp-amount" class="form-label">Amount</label>
+          <div class="input-with-symbol">
+            <span id="edit-form-currency-symbol" class="input-symbol">$</span>
+            <input type="number" id="edit-exp-amount" class="form-input padded-symbol" step="0.01" min="0.01" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-exp-title" class="form-label">Description / Title</label>
+          <input type="text" id="edit-exp-title" class="form-input" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-exp-category" class="form-label">Category</label>
+            <select id="edit-exp-category" class="form-input category-select-custom" required>
+              <option value="food">🍽️ Food & Dining</option>
+              <option value="groceries">🛒 Groceries</option>
+              <option value="housing">🏠 Housing & Rent</option>
+              <option value="transport">🚗 Transportation</option>
+              <option value="entertainment">🎬 Entertainment</option>
+              <option value="shopping">🛍️ Shopping</option>
+              <option value="utilities">⚡ Utilities & Bills</option>
+              <option value="health">❤️ Health & Fitness</option>
+              <option value="personal">✨ Personal Care</option>
+              <option value="other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-exp-date" class="form-label">Date</label>
+            <input type="date" id="edit-exp-date" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-exp-notes" class="form-label">Note</label>
+          <input type="text" id="edit-exp-notes" class="form-input">
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancel-edit-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Set Monthly Budget -->
+  <div id="budget-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Monthly Budget Limit</h3>
+        <button id="close-budget-modal-btn" class="modal-close-btn" aria-label="Close Modal">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+        Set your target spending budget for each month. Spendly will track your pace and warn you when you approach the limit.
+      </p>
+      <form id="budget-form" class="expense-form">
+        <div class="form-group">
+          <label for="budget-input" class="form-label">Target Budget Amount</label>
+          <div class="input-with-symbol">
+            <span id="budget-currency-symbol" class="input-symbol">$</span>
+            <input type="number" id="budget-input" class="form-input padded-symbol" step="10" min="1" required>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancel-budget-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Save Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Data Management & Backup -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Data & Backup</h3>
+        <button id="close-settings-modal-btn" class="modal-close-btn" aria-label="Close Modal">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="data-actions-grid">
+        <button id="export-csv-btn" class="data-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="data-btn-title">Export CSV</span>
+          <span class="data-btn-sub">Current month spreadsheet</span>
+        </button>
+
+        <button id="export-json-btn" class="data-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span class="data-btn-title">Backup JSON</span>
+          <span class="data-btn-sub">Complete data export</span>
+        </button>
+
+        <label for="import-json-input" class="data-btn" style="cursor: pointer;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span class="data-btn-title">Restore Backup</span>
+          <span class="data-btn-sub">Import Spendly JSON</span>
+          <input type="file" id="import-json-input" accept=".json" style="display: none;">
+        </label>
+
+        <button id="reset-sample-btn" class="data-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <polyline points="23 20 23 14 17 14"></polyline>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+          </svg>
+          <span class="data-btn-title">Load Sample Data</span>
+          <span class="data-btn-sub">Populate demo records</span>
+        </button>
+      </div>
+
+      <div style="border-top: 1px solid var(--border-light); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.8rem; color: var(--accent-danger);">Clear all expense records:</span>
+        <button id="clear-all-data-btn" class="btn-danger" style="font-size: 0.78rem; padding: 0.45rem 0.85rem;">Clear All Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Core Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
