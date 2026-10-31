@@ -14,6 +14,8 @@ import SavingsGoalsPage from './pages/SavingsGoalsPage';
 import SubscriptionsPage from './pages/SubscriptionsPage';
 import ChallengesPage from './pages/ChallengesPage';
 import SmartInsightsPage from './pages/SmartInsightsPage';
+import ReceiptScannerPage from './pages/ReceiptScannerPage';
+import FinancialHealthPage from './pages/FinancialHealthPage';
 import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
@@ -43,6 +45,10 @@ export default function App() {
         return <ChallengesPage />;
       case 'insights':
         return <SmartInsightsPage />;
+      case 'receipt-scanner':
+        return <ReceiptScannerPage />;
+      case 'financial-health':
+        return <FinancialHealthPage />;
       case 'settings':
         return <SettingsPage />;
       default:

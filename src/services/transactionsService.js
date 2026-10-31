@@ -143,6 +143,10 @@ export async function createTransaction(item) {
       date: item.date,
       payment_method: item.paymentMethod || 'UPI',
       notes: (item.notes || '').trim(),
+      receipt_url: item.receiptUrl || null,
+      receipt_items: item.receiptItems || null,
+      is_campus_expense: Boolean(item.isCampusExpense),
+      campus_category: item.campusCategory || null,
       category: { id: item.categoryId || 'other', name: item.type === 'income' ? 'Income' : 'Campus Expense', color: item.type === 'income' ? '#10b981' : '#f97316' },
       created_at: new Date().toISOString()
     };
@@ -160,7 +164,11 @@ export async function createTransaction(item) {
     date: item.date,
     payment_method: item.paymentMethod || 'UPI',
     notes: (item.notes || '').trim(),
-    is_recurring: Boolean(item.isRecurring)
+    is_recurring: Boolean(item.isRecurring),
+    receipt_url: item.receiptUrl || null,
+    receipt_items: item.receiptItems || null,
+    is_campus_expense: Boolean(item.isCampusExpense),
+    campus_category: item.campusCategory || null
   };
 
   const { data, error } = await supabase

@@ -6,6 +6,7 @@ import { fetchSavingsGoals } from '../services/savingsService';
 import { fetchSubscriptions, calculateSubscriptionMetrics } from '../services/subscriptionService';
 import { fetchChallenges, calculateChallengeStats } from '../services/challengeService';
 import { generateSpendingInsights } from '../services/insightsService';
+import { calculateFinancialHealthScore } from '../services/healthScoreService';
 import {
   Wallet,
   TrendingDown,
@@ -15,6 +16,8 @@ import {
   Target,
   CalendarClock,
   Flame,
+  Activity,
+  Camera,
   PlusCircle,
   ArrowUpRight,
   ArrowDownRight,
@@ -47,6 +50,7 @@ export default function DashboardPage() {
   const [goals, setGoals] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
   const [challenges, setChallenges] = useState([]);
+  const [healthScore, setHealthScore] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Load all dashboard components
@@ -57,16 +61,18 @@ export default function DashboardPage() {
         return;
       }
       try {
-        const [txs, gList, sList, cList] = await Promise.all([
+        const [txs, gList, sList, cList, hScore] = await Promise.all([
           fetchTransactions(user.id),
           fetchSavingsGoals(user.id),
           fetchSubscriptions(user.id),
-          fetchChallenges(user.id)
+          fetchChallenges(user.id),
+          calculateFinancialHealthScore(user.id).catch(() => null)
         ]);
         setTransactions(txs);
         setGoals(gList);
         setSubscriptions(sList);
         setChallenges(cList);
+        setHealthScore(hScore);
       } catch (err) {
         console.error('Error loading dashboard data:', err);
       } finally {
@@ -414,8 +420,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Row: Savings Goal Widget + Subscriptions + Streak */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      {/* Row: Savings Goal + Subscriptions + Streak + Health Score */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Savings Goal Progress */}
         <div
           onClick={() => setCurrentPage('goals')}
@@ -504,6 +510,33 @@ export default function DashboardPage() {
 
           <span className="text-[11px] font-bold text-rose-600 dark:text-rose-400 block">
             Click to log today's check-in
+          </span>
+        </div>
+
+        {/* Financial Health Score Widget */}
+        <div
+          onClick={() => setCurrentPage('financial-health')}
+          className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-indigo-500 cursor-pointer transition-all space-y-3"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+              Financial Health
+            </span>
+            <Activity className="w-4 h-4 text-indigo-600" />
+          </div>
+
+          <div>
+            <p className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">
+              {healthScore?.overallScore || 78}
+              <span className="text-xs font-bold text-slate-400">/100</span>
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Grade {healthScore?.grade || 'A'} • {healthScore?.tier || 'Healthy'}
+            </p>
+          </div>
+
+          <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 block">
+            View 5 diagnostic pillars →
           </span>
         </div>
       </div>

@@ -25,5 +25,7 @@ export const NAV_ITEMS = [
   { id: 'subscriptions', label: 'Subscriptions', icon: 'CalendarClock', badge: null },
   { id: 'challenges', label: 'No-Spend Challenge', icon: 'Flame', badge: 'Streak' },
   { id: 'insights', label: 'Smart Insights', icon: 'TrendingUp', badge: 'AI-Ready' },
+  { id: 'receipt-scanner', label: 'Receipt Scanner', icon: 'Camera', badge: 'OCR' },
+  { id: 'financial-health', label: 'Financial Health', icon: 'Activity', badge: '0-100' },
   { id: 'settings', label: 'Profile & Settings', icon: 'Settings', badge: null }
 ];
