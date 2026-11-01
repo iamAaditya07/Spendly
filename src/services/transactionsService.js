@@ -171,7 +171,7 @@ export async function createTransaction(item) {
     campus_category: item.campusCategory || null
   };
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from('transactions')
     .insert([payload])
     .select(`
@@ -179,6 +179,36 @@ export async function createTransaction(item) {
       category:categories(id, name, color, icon, type)
     `)
     .single();
+
+  // If Supabase reports schema cache column missing, fallback to core fields automatically
+  if (error && (error.message?.includes('schema cache') || error.code === 'PGRST204' || error.message?.includes('campus_category') || error.message?.includes('receipt_url'))) {
+    console.warn('Optional columns not migrated in Supabase yet. Retrying with core transaction fields:', error.message);
+    const corePayload = {
+      user_id: item.userId,
+      category_id: item.categoryId || null,
+      type: item.type || 'expense',
+      amount: parseFloat(item.amount),
+      description: item.description.trim(),
+      date: item.date,
+      payment_method: item.paymentMethod || 'UPI',
+      notes: (item.notes || '').trim(),
+      is_recurring: Boolean(item.isRecurring)
+    };
+
+    const retry = await supabase
+      .from('transactions')
+      .insert([corePayload])
+      .select(`
+        *,
+        category:categories(id, name, color, icon, type)
+      `)
+      .single();
+
+    if (!retry.error) {
+      return retry.data;
+    }
+    error = retry.error;
+  }
 
   if (error) {
     console.error('Error creating transaction:', error);
