@@ -27,5 +27,6 @@ export const NAV_ITEMS = [
   { id: 'insights', label: 'Smart Insights', icon: 'TrendingUp', badge: 'AI-Ready' },
   { id: 'receipt-scanner', label: 'Receipt Scanner', icon: 'Camera', badge: 'OCR' },
   { id: 'financial-health', label: 'Financial Health', icon: 'Activity', badge: '0-100' },
+  { id: 'finora-ai', label: 'Finora AI', icon: 'Bot', badge: 'Assistant' },
   { id: 'settings', label: 'Profile & Settings', icon: 'Settings', badge: null }
 ];

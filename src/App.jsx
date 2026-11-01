@@ -16,6 +16,7 @@ import ChallengesPage from './pages/ChallengesPage';
 import SmartInsightsPage from './pages/SmartInsightsPage';
 import ReceiptScannerPage from './pages/ReceiptScannerPage';
 import FinancialHealthPage from './pages/FinancialHealthPage';
+import FinoraAIPage from './pages/FinoraAIPage';
 import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
@@ -49,6 +50,8 @@ export default function App() {
         return <ReceiptScannerPage />;
       case 'financial-health':
         return <FinancialHealthPage />;
+      case 'finora-ai':
+        return <FinoraAIPage />;
       case 'settings':
         return <SettingsPage />;
       default:

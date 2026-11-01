@@ -59,3 +59,19 @@ ALTER TABLE public.financial_health_scores ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users manage own health scores" ON public.financial_health_scores;
 CREATE POLICY "Users manage own health scores" ON public.financial_health_scores
   FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- 5. Feature 9: AI Chat History Table
+CREATE TABLE IF NOT EXISTS public.ai_chat_history (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
+  content TEXT NOT NULL,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.ai_chat_history ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users manage own ai chat history" ON public.ai_chat_history;
+CREATE POLICY "Users manage own ai chat history" ON public.ai_chat_history
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
