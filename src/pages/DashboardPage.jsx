@@ -19,6 +19,7 @@ import {
   Activity,
   Camera,
   Bot,
+  Calendar as CalendarIcon,
   PlusCircle,
   ArrowUpRight,
   ArrowDownRight,
@@ -645,6 +646,17 @@ export default function DashboardPage() {
             </div>
             <p className="text-xs font-bold text-slate-900 dark:text-white">Health Score</p>
             <span className="text-[10px] text-slate-400">0-100 index</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentPage('expense-calendar')}
+            className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left hover:border-brand-500 transition-all hover:scale-[1.02] shadow-sm"
+          >
+            <div className="w-8 h-8 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-600 flex items-center justify-center mb-2">
+              <CalendarIcon className="w-4 h-4" />
+            </div>
+            <p className="text-xs font-bold text-slate-900 dark:text-white">Calendar</p>
+            <span className="text-[10px] text-slate-400">Daily spending matrix</span>
           </button>
         </div>
       </div>
