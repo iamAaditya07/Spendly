@@ -18,6 +18,7 @@ import ReceiptScannerPage from './pages/ReceiptScannerPage';
 import FinancialHealthPage from './pages/FinancialHealthPage';
 import FinoraAIPage from './pages/FinoraAIPage';
 import ExpenseCalendarPage from './pages/ExpenseCalendarPage';
+import RemindersPage from './pages/RemindersPage';
 import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
@@ -55,6 +56,8 @@ export default function App() {
         return <FinoraAIPage />;
       case 'expense-calendar':
         return <ExpenseCalendarPage />;
+      case 'reminders':
+        return <RemindersPage />;
       case 'settings':
         return <SettingsPage />;
       default:

@@ -8,7 +8,8 @@ import {
   PlusCircle,
   GraduationCap,
   Sparkles,
-  Wallet
+  Wallet,
+  Bell
 } from 'lucide-react';
 import { NAV_ITEMS } from '../../utils/constants';
 
@@ -65,6 +66,19 @@ export default function Navbar({ onOpenSidebar }) {
             >
               <PlusCircle className="w-4 h-4" />
               <span className="hidden sm:inline">Add Entry</span>
+            </button>
+          )}
+
+          {/* Smart Reminders Notification Bell */}
+          {user && (
+            <button
+              onClick={() => setCurrentPage('reminders')}
+              className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative"
+              title="Smart Reminders"
+              aria-label="View notifications"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500" />
             </button>
           )}
 

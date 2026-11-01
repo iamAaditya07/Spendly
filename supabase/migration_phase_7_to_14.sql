@@ -75,3 +75,40 @@ ALTER TABLE public.ai_chat_history ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users manage own ai chat history" ON public.ai_chat_history;
 CREATE POLICY "Users manage own ai chat history" ON public.ai_chat_history
   FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- 6. Feature 12: Notifications and Reminders System
+CREATE TABLE IF NOT EXISTS public.notifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('subscription', 'budget_warning', 'budget_exceeded', 'savings_goal', 'bill', 'system')),
+  priority TEXT DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high', 'critical')),
+  is_read BOOLEAN DEFAULT FALSE,
+  is_dismissed BOOLEAN DEFAULT FALSE,
+  reference_id TEXT,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  action_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.notification_preferences (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  subscription_reminders BOOLEAN DEFAULT TRUE,
+  budget_alerts BOOLEAN DEFAULT TRUE,
+  savings_goal_reminders BOOLEAN DEFAULT TRUE,
+  daily_digest BOOLEAN DEFAULT TRUE,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notification_preferences ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users manage own notifications" ON public.notifications;
+CREATE POLICY "Users manage own notifications" ON public.notifications
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users manage own notification preferences" ON public.notification_preferences;
+CREATE POLICY "Users manage own notification preferences" ON public.notification_preferences
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
